@@ -2,6 +2,8 @@ package com.pluralsight.candycoded;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 import org.junit.BeforeClass;
@@ -88,6 +90,7 @@ public class _1_StartTheStoreInformationActivity {
             //e.printStackTrace();
         }
     }
+
 
     @Test
     public void mainactivity_onoptionitemselected_return_super() throws Exception {
