@@ -1,6 +1,9 @@
 package com.pluralsight.candycoded;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -41,13 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
     listView.setAdapter(adapter);
 
-    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent detailIntent = new Intent(MainActivity.this, DetailActivity.class);
-        detailIntent.putExtra("position", i);
-        startActivity(detailIntent);
-      }
+    listView.setOnItemClickListener((adapterView, view, i, l) -> {
+      Intent detailIntent = new Intent(MainActivity.this, DetailActivity.class);
+      detailIntent.putExtra("position", i);
+      startActivity(detailIntent);
     });
 
     AsyncHttpClient client = new AsyncHttpClient();
@@ -61,16 +62,23 @@ public class MainActivity extends AppCompatActivity {
           @Override
           public void onSuccess(int statusCode, Header[] headers, String response) {
             Log.d("AsyncHttpClient", "response = " + response);
-            Gson gson = new GsonBuilder().create();;
+            Gson gson = new GsonBuilder().create();
             candies = gson.fromJson(response, Candy[].class);
 
             addCandiesToDatabase(candies);
 
             SQLiteDatabase db = candyDbHelper.getWritableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM candy", null);
+            @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT * FROM candy", null);
             //adapter.changeCursor(cursor);
           }
         });
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    Intent infoIntent = new Intent(this, InfoActivity.class);
+    startActivity(infoIntent);
+    return super.onOptionsItemSelected(item);
   }
 
   @Override
